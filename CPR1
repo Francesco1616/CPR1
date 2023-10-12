@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Generatore di messaggi casuali</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        h1, h2, button, input {
+            font-size: 48px;
+        }
+
+        /* Riduci la dimensione del testo nella lista dei messaggi */
+        #contenitore-messaggi p {
+            font-size: 24px;
+        }
+
+        #counter {
+            font-size: 36px;
+        }
+    </style>
+    <script>
+        const messaggiFissi = [
+            "Messaggio 1: Cappuccino gratis",
+            "Messaggio 2: caffè gratis",
+            "Messaggio 3: 20% di sconto sul prossimo acquisto",
+            "Messaggio 4: Torta gratis",
+            "Messaggio 5: Millefoglie gratis",
+            "Messaggio 6: Cappuccino gratis",
+            "Messaggio 7: caffè gratis",
+            "Messaggio 8: 20% di sconto sul prossimo acquisto",
+            "Messaggio 9: Torta gratis",
+            "Messaggio 10: Millefoglie gratis",
+            "Messaggio 11: Millefoglie gratis",
+            "Messaggio 12: Cappuccino gratis",
+            "Messaggio 13: caffè gratis",
+            "Messaggio 14: 20% di sconto sul prossimo acquisto",
+            "Messaggio 15: Torta gratis",
+            "Messaggio 16: Millefoglie gratis",
+            "Messaggio 17: Cappuccino gratis",
+            "Messaggio 18: caffè gratis",
+            "Messaggio 19: 20% di sconto sul prossimo acquisto",
+            "Messaggio 20: Torta gratis"
+        ];
+
+        let counter = 0;
+
+        // Recupera il numero fisso da localStorage
+        let numeroFisso = parseInt(localStorage.getItem('numeroFisso')) || 0;
+
+        function generaMessaggi() {
+            const numeroMessaggi = 1000;
+            const messaggiTotali = [];
+            
+            for (let i = 0; i < numeroMessaggi; i++) {
+                const indiceMessaggio = (i % 20);
+                messaggiTotali.push(messaggiFissi[indiceMessaggio]);
+            }
+
+            localStorage.setItem('messaggiFissi', JSON.stringify(messaggiTotali));
+        }
+
+        function mostraMessaggiFissi() {
+            const contenitoreMessaggi = document.getElementById("contenitore-messaggi");
+            contenitoreMessaggi.innerHTML = "";
+
+            const messaggiFissi = JSON.parse(localStorage.getItem('messaggiFissi'));
+
+            for (let i = 0; i < messaggiFissi.length; i++) {
+                const elementoMessaggio = document.createElement("p");
+                elementoMessaggio.textContent = `Messaggio ${i + 1}: ${messaggiFissi[i]}`;
+                contenitoreMessaggi.appendChild(elementoMessaggio);
+            }
+        }
+
+        function cercaMessaggio() {
+            const numeroCercato = parseInt(document.getElementById("numero-ricerca").value);
+            const risultatoRicerca = document.getElementById("risultato-ricerca");
+            const messaggiFissi = JSON.parse(localStorage.getItem('messaggiFissi'));
+
+            if (isNaN(numeroCercato) || numeroCercato < 1 || numeroCercato > messaggiFissi.length) {
+                risultatoRicerca.textContent = "Numero non valido";
+            } else {
+                risultatoRicerca.textContent = `Messaggio ${numeroCercato}: ${messaggiFissi[numeroCercato - 1]}`;
+                counter++;
+                document.getElementById("counter").textContent = `Ricerche effettuate: ${counter}`;
+
+                // Aggiorna e memorizza il numero fisso
+                numeroFisso = counter;
+                localStorage.setItem('numeroFisso', numeroFisso);
+
+                // Visualizza il numero fisso
+                document.getElementById("numerofisso").textContent = `Numero fisso: ${numeroFisso}`;
+            }
+        }
+
+        // Genera i messaggi all'avvio del documento
+        generaMessaggi();
+
+        // Visualizza il numero fisso all'avvio del documento
+        document.getElementById("numerofisso").textContent = `Numero fisso: ${numeroFisso}`;
+    </script>
+</head>
+<body>
+    <h1>Generatore di messaggi casuali</h1>
+    <button onclick="mostraMessaggiFissi()">Mostra Messaggi</button>
+    <div id="contenitore-messaggi"></div>
+
+    <h2>Ricerca Messaggio</h2>
+    <input type="number" id="numero-ricerca" placeholder="Inserisci un numero da 1 a 1000">
+    <button onclick="cercaMessaggio()">Invia</button>
+    <div id="risultato-ricerca"></div>
+
+    <div id="counter">Ricerche effettuate: 0</div>
+    
+    <!-- Questo è il numero fisso -->
+    <div id="numerofisso"></div>
+</body>
+</html>
